@@ -1,10 +1,14 @@
 import 'dotenv/config';
 import express from 'express';
+import * as mongo from './mongo.js'
 
 const app = express();
 
-app.get('/', (req, res) => {
-  return res.send('Received a GET HTTP method');
+app.get('/videos', async (req, res) => {
+  await mongo.connectToClient();
+  const videos = await mongo.getCollection('Videos');
+  mongo.closeClient();
+  return res.send(videos);
 });
 
 app.post('/', (req, res) => {

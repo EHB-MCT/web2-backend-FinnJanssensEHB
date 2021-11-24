@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 import 'dotenv/config';
 import * as v from 'vimeo';
@@ -49,35 +49,7 @@ function vimeoGetVideos() {
     } else {
       // console.log(body.data);
       videos = body.data;
-      console.log("Type of videos: " + typeof (videos));
-      insertDocuments(videos)
-        .then(console.log)
-        .catch(console.error)
-        .finally(() => mongoClient.close());
+      console.log(videos);
     }
   })
-
-  // const findResult = await collection.find({}).toArray();
-  // console.log('Found documents =>', findResult);
-  // for (var i = 0; i < videos.length; i++) {
-  //   var video = videos[i];
-  //   console.log(video.uri);
-  // }
 }
-
-async function insertDocuments(documents) {
-  await mongoClient.connect();
-  console.log('Connected successfully to server');
-  const db = mongoClient.db(dbName);
-  const collection = db.collection(collectionName);
-  const insertResult = await collection.insertMany(documents);
-  console.log('Inserted documents =>', insertResult);
-  return 'done';
-}
-
-vimeoGetVideos();
-
-// main()
-//   .then(console.log)
-//   .catch(console.error)
-//   .finally(() => mongoClient.close());
