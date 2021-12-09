@@ -13,10 +13,10 @@ app.use(express.json());
 app.get("/videos", async (req, res) => {
   console.log("test");
   await mongo.connectToClient();
-  const videos = await mongo.updateVideosCollection();
-  // const videos = await mongo.getCollection("Videos");
+  await mongo.updateVideosCollection();
+  const videos = await mongo.getCollection("Videos");
   mongo.closeClient();
-  return res.send(JSON.stringify(videos));
+  return res.json(videos);
 });
 
 app.post("/", (req, res) => {

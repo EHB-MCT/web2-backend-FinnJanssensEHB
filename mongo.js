@@ -38,7 +38,7 @@ async function insertVideos(videos) {
 }
 
 async function updateVideosCollection() {
-  return v.GetVideos();
+  return await v.GetVideos();
 }
 
 export {
