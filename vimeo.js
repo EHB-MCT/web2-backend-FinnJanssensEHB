@@ -2,6 +2,7 @@
 
 import "dotenv/config";
 import * as v from "vimeo";
+import fs from "fs";
 
 const client_id = process.env.CLIENT_ID;
 const client_secret = process.env.CLIENT_SECRET;
@@ -28,8 +29,14 @@ function GetVideos() {
         } else {
           // console.log(body.data);
           videos = body.data;
-          let publicVideos = videos.filter(isPublic);
-          console.log(videos.length);
+          let publicVideos = videos.filter(isPublicAndPlayable);
+          let config = JSON.parse(fs.readFileSync("config.json"));
+          let unusedFields = config.unused;
+          publicVideos.forEach((video) => {
+            unusedFields.forEach((field) => {
+              delete video[field];
+            });
+          });
           resolve(publicVideos);
         }
       }
@@ -37,9 +44,8 @@ function GetVideos() {
   });
 }
 
-function isPublic(video) {
-  console.log("video");
-  if (video.privacy) {
+function isPublicAndPlayable(video) {
+  if (video.privacy && video.is_playable) {
     if (video.privacy.view == "anybody") {
       return video;
     }

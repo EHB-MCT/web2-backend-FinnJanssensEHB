@@ -1,0 +1,31 @@
+{
+  "unused": [
+    "language",
+    "embed",
+    "modified_time",
+    "release_time",
+    "content_rating",
+    "content_rating_class",
+    "rating_mod_locked",
+    "license",
+    "privacy",
+    "tags",
+    "stats",
+    "categories",
+    "uploader",
+    "metadata",
+    "manage_link",
+    "user",
+    "parent_folder",
+    "last_user_action_event_date",
+    "review_page",
+    "files",
+    "app",
+    "status",
+    "resource_key",
+    "upload",
+    "transcode",
+    "is_playable",
+    "has_audio"
+  ]
+}

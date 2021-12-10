@@ -3,6 +3,7 @@ import express from "express";
 import cors from "cors";
 
 import * as mongo from "./mongo.js";
+import * as v from "./vimeo.js";
 
 const app = express();
 
@@ -11,11 +12,7 @@ app.use(cors());
 app.use(express.json());
 
 app.get("/videos", async (req, res) => {
-  console.log("test");
-  await mongo.connectToClient();
-  await mongo.updateVideosCollection();
-  const videos = await mongo.getCollection("Videos");
-  mongo.closeClient();
+  let videos = await v.GetVideos();
   return res.json(videos);
 });
 

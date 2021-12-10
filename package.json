@@ -5,7 +5,7 @@
   "type": "module",
   "main": "vimeo.js",
   "scripts": {
-    "start": "node script.js"
+    "start-dev": "nodemon script.js"
   },
   "repository": {
     "type": "git",
