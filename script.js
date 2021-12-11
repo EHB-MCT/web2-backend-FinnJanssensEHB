@@ -29,9 +29,12 @@ app.get("/", (req, res) => {
   if (!req.oidc.isAuthenticated()) {
     res.redirect("/login");
   } else {
-    res.redirect("/dashboard");
+    res.redirect("/admin");
   }
 });
+
+app.use("/admin", requiresAuth());
+app.use("/admin", express.static(path.join(path.resolve(), "admin")));
 
 app.get("/dashboard", requiresAuth(), (req, res) => {
   var options = {
