@@ -36,21 +36,6 @@ app.get("/", (req, res) => {
 app.use("/admin", requiresAuth());
 app.use("/admin", express.static(path.join(path.resolve(), "admin")));
 
-app.get("/dashboard", requiresAuth(), (req, res) => {
-  var options = {
-    root: path.join(path.resolve()),
-  };
-
-  var fileName = "index.html";
-  res.sendFile(fileName, options, function (err) {
-    if (err) {
-      next(err);
-    } else {
-      console.log("Sent:", fileName);
-    }
-  });
-});
-
 app.get("/profile", requiresAuth(), (req, res) => {
   res.send(JSON.stringify(req.oidc.user));
 });
