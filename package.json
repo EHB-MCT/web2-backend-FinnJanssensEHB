@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "",
   "type": "module",
-  "main": "vimeo.js",
+  "main": "script.js",
   "scripts": {
     "start-dev": "nodemon script.js",
     "start": "node script.js"
