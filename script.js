@@ -3,8 +3,8 @@ import express from "express";
 import cors from "cors";
 import path from "path";
 
-import * as mongo from "./mongo.js";
-import * as v from "./vimeo.js";
+import * as mongo from "./scripts/mongo.js";
+import * as v from "./scripts/vimeo.js";
 
 const app = express();
 
@@ -16,7 +16,6 @@ app.get("/", (req, res) => {
   res.redirect("/admin");
 });
 
-// app.use("/admin", requiresAuth());
 app.use("/admin", express.static(path.join(path.resolve(), "admin")));
 
 app.get("/videos", async (req, res) => {
