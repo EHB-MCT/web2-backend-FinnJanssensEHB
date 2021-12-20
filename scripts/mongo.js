@@ -25,7 +25,7 @@ async function getCollection(collectionName) {
   const db = mongoClient.db(dbName);
   const collection = db.collection(collectionName);
   const findResult = await collection.find({}).toArray();
-  console.log("Found documents =>", findResult);
+  // console.log("Found documents =>", findResult);
   return findResult;
 }
 

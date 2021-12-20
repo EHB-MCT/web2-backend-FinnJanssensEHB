@@ -44,9 +44,16 @@ app.get("/profile", requiresAuth(), (req, res) => {
   res.send(JSON.stringify(req.oidc.user));
 });
 
-app.get("/videos", async (req, res) => {
+app.get("/videos", requiresAuth(), async (req, res) => {
   let videos = await v.GetVideos();
   return res.json(videos);
+});
+
+app.get("/featured", requiresAuth(), async (req, res) => {
+  await mongo.connectToClient();
+  let featured = await mongo.getCollection("Featured");
+  mongo.closeClient();
+  return res.json(featured);
 });
 
 app.listen(process.env.PORT, () =>

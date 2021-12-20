@@ -8,24 +8,29 @@ window.onload = () => {
     window.location.replace(BASE_URL + "logout");
   });
   const videosTableBody = document.getElementById("videosTableBody");
-  renderVideos(BASE_URL + "videos", videosTableBody);
+  let featuredVideos;
+  getFeaturedVideos().then((featured) => {
+    featuredVideos = featured;
+    renderVideos(videosTableBody, featuredVideos);
+  });
 };
 
-function renderVideos(fetch_url, container) {
+function renderVideos(container, featuredVideos) {
   let HTMLstring = "";
+  let favoriteHTML = "";
   container.innerHTML = `
     <div class="spinner-grow" role="status">
       <span class="sr-only"></span>
     </div>
   `;
-  console.log(fetch_url);
-  fetch(fetch_url)
+  fetch(BASE_URL + "Videos")
     .then((response) => response.json())
     .then((data) => {
       data.forEach((video) => {
-        console.log(video);
+        console.log(featuredVideos);
+        favoriteHTML = isVideoFeatured(video, featuredVideos);
         HTMLstring += `
-            <tr>
+            <tr id=${video.link}>
                 <td>${video.name}</td>
                 <td>
                     <a href="${video.link}">
@@ -34,10 +39,33 @@ function renderVideos(fetch_url, container) {
                 </td>
                 <td>${video.duration}</td>
                 <td>${video.created_time}</td>
-                <td></td>
+                <td><i class="bi ${favoriteHTML} favorite"></i></td>
             </tr> 
             `;
       });
       container.innerHTML = HTMLstring;
     });
+}
+
+async function getFeaturedVideos() {
+  const response = await fetch(BASE_URL + "featured");
+  const data = await response.json();
+  return data;
+}
+
+function isVideoFeatured(video, featuredVideos) {
+  let favorite;
+  for (let i = 0; i < featuredVideos.length; i++) {
+    if (featuredVideos[i].link == video.link) {
+      favorite = true;
+      break;
+    } else {
+      favorite = false;
+    }
+  }
+  if (favorite) {
+    return "bi-star-fill";
+  } else {
+    return "bi-star";
+  }
 }
