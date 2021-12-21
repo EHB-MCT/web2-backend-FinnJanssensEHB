@@ -29,22 +29,37 @@ async function getCollection(collectionName) {
   return findResult;
 }
 
-async function insertVideos(videos) {
+async function insertDocument(data, collectionName) {
   const db = mongoClient.db(dbName);
-  const collection = db.collection("Videos");
-  const insertResult = await collection.insertMany(documents);
-  console.log("Inserted documents =>", insertResult);
-  return "done";
+  const collection = db.collection(collectionName);
+  await collection.insertOne(data);
 }
 
-async function updateVideosCollection() {
-  return await v.GetVideos();
+async function deleteDocument(id, collectionName) {
+  const db = mongoClient.db(dbName);
+  const collection = db.collection(collectionName);
+  await collection.deleteOne({
+    _id: mdb.ObjectId(id),
+  });
+}
+
+async function isVideoFeatured(link) {
+  const db = mongoClient.db(dbName);
+  const collection = db.collection("Featured");
+  const searchResult = await collection.find({ link: link }).toArray();
+  if (searchResult.length == 0) {
+    return null;
+  } else {
+    let oID = searchResult[0]._id;
+    return String(oID);
+  }
 }
 
 export {
   connectToClient,
   closeClient,
   getCollection,
-  insertVideos,
-  updateVideosCollection,
+  insertDocument,
+  deleteDocument,
+  isVideoFeatured,
 };

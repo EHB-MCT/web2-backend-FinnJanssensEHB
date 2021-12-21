@@ -27,7 +27,6 @@ function renderVideos(container, featuredVideos) {
     .then((response) => response.json())
     .then((data) => {
       data.forEach((video) => {
-        console.log(featuredVideos);
         favoriteHTML = isVideoFeatured(video, featuredVideos);
         HTMLstring += `
             <tr id=${video.link}>
@@ -39,11 +38,33 @@ function renderVideos(container, featuredVideos) {
                 </td>
                 <td>${video.duration}</td>
                 <td>${video.created_time}</td>
-                <td><i class="bi ${favoriteHTML} favorite"></i></td>
+                <td><i class="bi ${favoriteHTML} featuredBtn"></i></td>
             </tr> 
             `;
       });
       container.innerHTML = HTMLstring;
+    })
+    .then(function () {
+      let featuredButtons = document.getElementsByClassName("featuredBtn");
+      [...featuredButtons].forEach((btn) => {
+        btn.addEventListener("click", function (e) {
+          let id = String(e.target.closest("tr").id).substring(18);
+          console.log(id);
+          fetch(BASE_URL + `featured/${id}`, {
+            method: "POST",
+            mode: "cors",
+            headers: {
+              "Content-Type": "application/json",
+              "Content-Security-Policy": "upgrade-insecure-requests",
+            },
+          }).then(function () {
+            getFeaturedVideos().then((featured) => {
+              featuredVideos = featured;
+              renderVideos(videosTableBody, featuredVideos);
+            });
+          });
+        });
+      });
     });
 }
 

@@ -49,11 +49,27 @@ app.get("/videos", requiresAuth(), async (req, res) => {
   return res.json(videos);
 });
 
-app.get("/featured", requiresAuth(), async (req, res) => {
+app.get("/featured", async (req, res) => {
   await mongo.connectToClient();
   let featured = await mongo.getCollection("Featured");
   mongo.closeClient();
   return res.json(featured);
+});
+
+app.post("/featured/:uri", async (req, res) => {
+  let { uri } = req.params;
+  let link = `https://vimeo.com/${uri}`;
+  await mongo.connectToClient();
+  let id = await mongo.isVideoFeatured(link);
+  if (id != null) {
+    console.log(id);
+    await mongo.deleteDocument(id, "Featured");
+  } else {
+    console.log("video isnt featured yet");
+    await mongo.insertDocument({ link: link }, "Featured");
+  }
+  mongo.closeClient();
+  return res.status(200).send();
 });
 
 app.listen(process.env.PORT, () =>
