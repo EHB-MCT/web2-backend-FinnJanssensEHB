@@ -54,12 +54,13 @@ app.get("/videos/:uri", async (req, res) => {
   let link = `/videos/${uri}`;
   console.log(link);
   let videos = await v.GetVideos();
-  for (let i = 0; i < videos.length; i++) {
-    if (videos[i].uri == link) {
-      return res.json(videos[i]);
-    } else {
-      return res.status(400).send("That video uri was not found.");
-    }
+  let result = [...videos].filter(function (video) {
+    return video.uri == link;
+  });
+  if (result[0]) {
+    return res.json(result[0]);
+  } else {
+    return res.status(400).send("That video uri was not found.");
   }
 });
 
