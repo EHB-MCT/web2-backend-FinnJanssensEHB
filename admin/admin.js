@@ -23,7 +23,14 @@ function renderVideos(container, featuredVideos) {
       <span class="sr-only"></span>
     </div>
   `;
-  fetch(BASE_URL + "Videos")
+  fetch(BASE_URL + "Videos", {
+    method: "GET",
+    mode: "cors",
+    headers: {
+      "Content-Type": "application/json",
+      "Content-Security-Policy": "upgrade-insecure-requests",
+    },
+  })
     .then((response) => response.json())
     .then((data) => {
       data.forEach((video) => {
