@@ -99,6 +99,13 @@ app.get("/featured/:uri", async (req, res) => {
   mongo.closeClient();
 });
 
+app.get("/programmas", async (req, res) => {
+  await mongo.connectToClient();
+  let programmas = await mongo.getCollection("Programmas");
+  mongo.closeClient();
+  return res.json(programmas);
+});
+
 app.listen(process.env.PORT, () =>
   console.log(`Example app listening on port ${process.env.PORT}!`)
 );
