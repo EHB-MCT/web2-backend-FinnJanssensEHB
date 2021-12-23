@@ -44,9 +44,23 @@ app.get("/profile", requiresAuth(), (req, res) => {
   res.send(JSON.stringify(req.oidc.user));
 });
 
-app.get("/videos", requiresAuth(), async (req, res) => {
+app.get("/videos", async (req, res) => {
   let videos = await v.GetVideos();
   return res.json(videos);
+});
+
+app.get("/videos/:uri", async (req, res) => {
+  let { uri } = req.params;
+  let link = `/videos/${uri}`;
+  console.log(link);
+  let videos = await v.GetVideos();
+  for (let i = 0; i < videos.length; i++) {
+    if (videos[i].uri == link) {
+      return res.json(videos[i]);
+    } else {
+      return res.status(400).send("That video uri was not found.");
+    }
+  }
 });
 
 app.get("/featured", async (req, res) => {
@@ -56,7 +70,7 @@ app.get("/featured", async (req, res) => {
   return res.json(featured);
 });
 
-app.post("/featured/:uri", async (req, res) => {
+app.post("/featured/:uri", requiresAuth(), async (req, res) => {
   let { uri } = req.params;
   let link = `https://vimeo.com/${uri}`;
   await mongo.connectToClient();
@@ -70,6 +84,19 @@ app.post("/featured/:uri", async (req, res) => {
   }
   mongo.closeClient();
   return res.status(200).send();
+});
+
+app.get("/featured/:uri", async (req, res) => {
+  let { uri } = req.params;
+  let link = `https://vimeo.com/${uri}`;
+  await mongo.connectToClient();
+  let id = await mongo.isVideoFeatured(link);
+  if (id != null) {
+    res.redirect(`/videos/${uri}`);
+  } else {
+    res.status(404).send("This video isn't featured");
+  }
+  mongo.closeClient();
 });
 
 app.listen(process.env.PORT, () =>
